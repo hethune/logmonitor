@@ -1,0 +1,25 @@
+sending_patterns:
+  - stop_words:
+    - 'Failed'
+    - 'Exception'
+    recipients:
+       - 'yuechao.li@wehome.io'
+       - 'jerry.an@wehome.io'
+       - 'wenhang@wehome.io'
+       - 'haorui@wehome.io'
+       - 'vivian.zhang@wehome.io'
+    group_name: engineer_groups
+
+  - stop_words:
+      - 'wechat'
+    recipients:
+      - 'ziyan@wehome.io'
+      - 'lilychen@wehome.io'
+      - 'vivian.zhang@wehome.io'
+      - 'starry@wehome.io'
+      - 'roc@wehome.io'
+    group_name: operation_groups
+  
+request_url: 'http://localhost:5000/message'
+logpath: '/Users/cydream/monitorlog/err.log'
+msglength: 2000
