@@ -1,0 +1,14 @@
+[Unit]
+Description=Log Monitor Service
+After=multi-user.target
+
+[Service]
+User=production
+Group=www-data
+WorkingDirectory=/srv/logmonitor
+Environment="PATH=/srv/logmonitor/venv/bin"
+Type=idle
+ExecStart=/srv/logmonitor/venv/bin/python /srv/logmonitor/run.py
+
+[Install]
+WantedBy=multi-user.target
