@@ -1,0 +1,2 @@
+PyYaml>=3.12
+requests>=2.14.2
