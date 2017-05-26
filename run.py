@@ -31,7 +31,8 @@ def send_msg(msg, recipients):
   data = json.dumps(values)
   req = requests.post(url, data, headers=headers)
 
-t = tail.Tail(config['logpath'])
-t.register_callback(return_line)
-t.follow(s=1)
+if __name__ == "__main__":
+  t = tail.Tail(config['logpath'])
+  t.register_callback(return_line)
+  t.follow(s=1)
 
