@@ -26,6 +26,7 @@ import sys
 import time
 
 RULE = '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+INTERVAL = 10
 
 class Tail(object):
   ''' Represents a tail command. '''
@@ -48,11 +49,13 @@ class Tail(object):
 
     Arguments:
       s - Number of seconds to wait between each iteration; Defaults to 1. 
+    return contains failed and Complete exception block.
     '''
 
     flag = False
     exceptionContent = ''
     exceptionCount = 0
+    last_time = time.time()
     with open(self.tailed_file) as file_:
       # Go to the end of file
       file_.seek(0,2)
@@ -62,28 +65,34 @@ class Tail(object):
         if not line:
           file_.seek(curr_position)
           time.sleep(s)
+          if time.time() - last_time > INTERVAL and 'Exception' in exceptionContent:
+            exceptionContent, flag = self.back(exceptionContent)
         else:
+
+          last_time = time.time()
+          #get contains exception line
           if 'Exception' in line:
             exceptionCount += 1
             if exceptionCount > 1:
-              self.callback(exceptionContent)
-              exceptionContent = ''
-              exceptionCount = 0
+              exceptionContent = self.back(exceptionContent)[0]
             exceptionContent += line 
             flag = True
             continue
-
+          # get Complete exception block
           if flag == True:
             if re.search(RULE, line):
-              flag = False
-              self.callback(exceptionContent)
-              exceptionContent = ''
-              exceptionCount = 0
+              exceptionContent, flag = self.back(exceptionContent)
               continue
             exceptionContent += line
-
+          # other line
           if flag == False:
             self.callback(line)
+
+  def back(self, content):
+    self.callback(content)
+    exceptionContent = ''
+    flag = False
+    return (exceptionContent, flag)
 
   def register_callback(self, func):
     ''' Overrides default callback function to provided function. '''
